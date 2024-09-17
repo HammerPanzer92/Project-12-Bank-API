@@ -1,19 +1,23 @@
 import "./App.css";
-import Features from "./components/Features";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
-import Hero from "./components/Hero";
 import Navbar from "./components/Nav";
+import Home from "./components/Home";
+import Signin from "./components/Signin";
+import User from "./components/User";
 
 function App() {
-
   return (
     <>
-      <Navbar/>
-      <main>
-        <Hero/>
-        <Features/>
-      </main>
-      <Footer/>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/sign-in" element={<Signin />} />
+          <Route path="/user" element={<User />} />
+        </Routes>
+      </BrowserRouter>
+      <Footer />
     </>
   );
 }
