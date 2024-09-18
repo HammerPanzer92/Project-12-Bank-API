@@ -1,13 +1,74 @@
+import React, { useState } from "react";
+
 export default function User() {
+  //State du nom et prénom (temp, seront stocké dans store Redux)
+  const [firstname, setFirstname] = useState("firstname");
+  const [lastname, setLastname] = useState("lastname");
+
+  //State des inputs
+  const [tempFirstname, setTempFirstname] = useState(firstname);
+  const [tempLastname, setTempLastname] = useState(lastname);
+
+  //State qui détermine l'affichage des inputs pour modifié le nom et prénom
+  const [isEditing, setIsEditing] = useState(false);
+
+  //Gére sauvegarde du nouveau nom et prénom
+  const handleSave = () => {
+    setFirstname(tempFirstname);
+    setLastname(tempLastname);
+    setIsEditing(false);
+  };
+
+  //Gére l'annulation des modifications
+  const handleCancel = () => {
+    setTempFirstname(firstname);//Reset des valeurs temporaires
+    setTempLastname(lastname);
+    setIsEditing(false);
+  };
+
   return (
     <main className="main bg-dark">
       <div className="header">
         <h1>
           Welcome back
           <br />
-          Tony Jarvis!
+          {firstname} {lastname}!
         </h1>
-        <button className="edit-button">Edit Name</button>
+        
+        {!isEditing && ( //Affichage du btn "edit name" si on n'est pas en mode édition
+          <button className="edit-button" onClick={() => setIsEditing(true)}>
+            Edit Name
+          </button>
+        )}
+        
+        {isEditing && ( //si on est en mode édition alors on affiche les inputs a la place
+          <div className="edit-container">
+            <div className="input-container">
+              <input
+                type="text"
+                className="form-control"
+                id="edit-firstname"
+                value={tempFirstname}
+                onChange={(e) => setTempFirstname(e.target.value)}
+              />
+              <input
+                type="text"
+                className="form-control"
+                id="edit-lastname"
+                value={tempLastname}
+                onChange={(e) => setTempLastname(e.target.value)}
+              />
+            </div>
+            <div className="button-container">
+              <button className="edit-button" onClick={handleSave}>
+                Save
+              </button>
+              <button className="edit-button" onClick={handleCancel}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       <h2 className="sr-only">Accounts</h2>
       <section className="account">
