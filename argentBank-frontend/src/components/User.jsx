@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { changeName } from "../redux/userReducer";
 
 export default function User() {
+  
+  const user = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+
   //State du nom et prénom (temp, seront stocké dans store Redux)
   const [firstname, setFirstname] = useState("firstname");
   const [lastname, setLastname] = useState("lastname");
@@ -16,6 +22,8 @@ export default function User() {
   const handleSave = () => {
     setFirstname(tempFirstname);
     setLastname(tempLastname);
+    dispatch(changeName({firstname: tempFirstname, lastname: tempLastname}));
+    console.log(user);
     setIsEditing(false);
   };
 
