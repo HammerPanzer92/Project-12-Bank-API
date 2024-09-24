@@ -1,26 +1,59 @@
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserLogin } from "../redux/userReducer";
+
 export default function Signin() {
+  //Stocke le username et mot de password
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  //Gére le formulaire de connexion
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log("Username:", username);
+    console.log("Password:", password);
+
+    dispatch(fetchUserLogin({email: username, password: password}));
+
+    console.log("Post sign in");
+    console.log(user);
+  };
+
   return (
     <main className="main bg-dark">
       <section className="sign-in-content">
         <i className="fa fa-user-circle sign-in-icon"></i>
         <h1>Sign In</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
-            <label for="username">Username</label>
-            <input type="text" id="username" />
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
           <div className="input-wrapper">
-            <label for="password">Password</label>
-            <input type="password" id="password" />
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <div className="input-remember">
             <input type="checkbox" id="remember-me" />
-            <label for="remember-me">Remember me</label>
+            <label htmlFor="remember-me">Remember me</label>
           </div>
-          <a href="./user.html" className="sign-in-button">
+          <button type="submit" className="sign-in-button">
             Sign In
-          </a>
-          <button className="sign-in-button">Sign In</button>
+          </button>
         </form>
       </section>
     </main>
