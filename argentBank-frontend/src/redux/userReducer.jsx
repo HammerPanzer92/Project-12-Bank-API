@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { login } from "../services/api";
 
 const BackendUrl = "http://localhost:3001/api/v1/user";
 
 const initialState = {
   firstname: "",
   lastname: "",
+  auth: "",
 };
 
 //Création du Thunk (asynchrone) pour le login
@@ -31,6 +33,11 @@ const userSlice = createSlice({
     changeName: (state, action) => {
       state.firstname = action.payload.firstname;
       state.lastname = action.payload.lastname;
+    },
+    cleanState: (state, action) => {
+      state.firstname = initialState.firstname;
+      state.lastname = initialState.lastname;
+      state.auth = initialState.auth;
     },
   },
   extraReducers: builder => {

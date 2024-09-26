@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserLogin } from "../redux/userReducer";
+import { getProfile, login } from "../services/api";
 
 export default function Signin() {
   //Stocke le username et mot de password
@@ -11,16 +12,24 @@ export default function Signin() {
   const dispatch = useDispatch();
 
   //Gére le formulaire de connexion
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Username:", username);
-    console.log("Password:", password);
+    const userData = { email: username, password: password };
+    try {
+      const data = await login(userData);
 
-    dispatch(fetchUserLogin({email: username, password: password}));
+      console.log("Login page :");
+      console.log(data);
 
-    console.log("Post sign in");
-    console.log(user);
+      if(data.body.token){
+        const names = await getProfile(data.body.token);
+        console.log("Names login :");
+        console.log(names);
+      }
+    } catch (err) {
+      console.error("Error during login : " + err);
+    }
   };
 
   return (
