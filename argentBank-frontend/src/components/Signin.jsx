@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserLogin } from "../redux/userReducer";
-import { getProfile, login } from "../services/api";
 
 export default function Signin() {
   //Stocke le username et mot de password
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  //Bool pour stockage du token dans un cookie
+  const [remember, setRemember] = useState(false);
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -16,20 +18,8 @@ export default function Signin() {
     e.preventDefault();
 
     const userData = { email: username, password: password };
-    try {
-      const data = await login(userData);
 
-      console.log("Login page :");
-      console.log(data);
-
-      if(data.body.token){
-        const names = await getProfile(data.body.token);
-        console.log("Names login :");
-        console.log(names);
-      }
-    } catch (err) {
-      console.error("Error during login : " + err);
-    }
+    dispatch(fetchUserLogin(userData));
   };
 
   return (
@@ -57,7 +47,14 @@ export default function Signin() {
             />
           </div>
           <div className="input-remember">
-            <input type="checkbox" id="remember-me" />
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={remember}
+              onChange={(e) => {
+                setRemember(e.target.checked);
+              }}
+            />
             <label htmlFor="remember-me">Remember me</label>
           </div>
           <button type="submit" className="sign-in-button">
