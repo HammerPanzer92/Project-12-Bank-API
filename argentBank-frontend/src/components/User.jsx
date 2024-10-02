@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeAuth, changeName, fetchUserProfile } from "../redux/userReducer";
+import {
+  changeAuth,
+  changeName,
+  fetchUserProfile,
+  updateUserProfile,
+} from "../redux/userReducer";
 import { getTokenCookie } from "../services/token";
 import { useNavigate } from "react-router-dom";
 
@@ -9,13 +14,9 @@ export default function User() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //State du nom et prénom (temp, seront stocké dans store Redux)
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-
   //State des inputs
-  const [tempFirstname, setTempFirstname] = useState(firstname);
-  const [tempLastname, setTempLastname] = useState(lastname);
+  const [tempFirstname, setTempFirstname] = useState("");
+  const [tempLastname, setTempLastname] = useState("");
 
   //State qui détermine l'affichage des inputs pour modifié le nom et prénom
   const [isEditing, setIsEditing] = useState(false);
@@ -23,24 +24,29 @@ export default function User() {
   useEffect(() => {
     var token = getTokenCookie();
     if (user.firstname && user.lastname) {
-      setFirstname(user.firstname);
-      setLastname(user.lastname);
+      setTempFirstname(user.firstname);
+      setTempLastname(user.lastname);
       token = user.auth;
-    }else{
-      if(token && !user.firstname){
+    } else {
+      if (token && !user.firstname) {
+        console.log("test token");
+        console.log(token);
         dispatch(changeAuth(token));
         dispatch(fetchUserProfile(token));
-      }else{
-        navigate('/sign-in');
+      } else {
+        navigate("/sign-in");
       }
     }
   }, []);
 
   //Gére sauvegarde du nouveau nom et prénom
   const handleSave = () => {
-    setFirstname(tempFirstname);
-    setLastname(tempLastname);
-    dispatch(changeName({ firstname: tempFirstname, lastname: tempLastname }));
+    dispatch(
+      updateUserProfile({
+        auth: user.auth,
+        profile: { firstname: tempFirstname, lastname: tempLastname },
+      })
+    );
     setIsEditing(false);
   };
 
@@ -48,6 +54,7 @@ export default function User() {
   const handleCancel = () => {
     setTempFirstname(user.firstname); //Reset des valeurs temporaires
     setTempLastname(user.lastname);
+
     setIsEditing(false);
   };
 

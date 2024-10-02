@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getProfile, login } from "../services/api";
+import { getProfile, login, modifyProfile } from "../services/api";
 
 const initialState = {
   firstname: "",
@@ -42,6 +42,24 @@ export const fetchUserLogin = createAsyncThunk(
   }
 );
 
+//Thunk pour update du profile
+export const updateUserProfile = createAsyncThunk(
+  "user/updateUserProfile",
+  async (data, thunkAPI) => {
+    console.log("Called updateUserProfile");
+    console.log(data);
+    try{
+      const response = await modifyProfile(data.auth, data.profile);
+      if (response.status === 200) {
+        return response;
+      } else {
+        return thunkAPI.rejectWithValue(response.message);
+      }
+    } catch(err){
+      return thunkAPI.rejectWithValue(err);
+    }
+  });
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -51,7 +69,7 @@ const userSlice = createSlice({
       state.lastname = action.payload.lastname;
     },
     changeAuth: (state, action) => {
-      state.auth = action.payload.token;
+      state.auth = action.payload;
     },
     cleanState: (state, action) => {
       state.firstname = initialState.firstname;
@@ -81,7 +99,18 @@ const userSlice = createSlice({
       .addCase(fetchUserProfile.rejected, (state, action) => {
         console.error("Erreur thunk profile :");
         console.log(action.payload);
-      });
+      })
+      //Cas pour la modification du profile
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        console.log("Thunk update profile :");
+        console.log(action.payload);        
+        state.firstname = action.payload.body.firstName;
+        state.lastname = action.payload.body.lastName;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        console.error("Erreur Thunk update profile :");
+        console.log(action.payload);
+      })
   },
 });
 
