@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserLogin } from "../redux/userReducer";
+import { useNavigate } from "react-router-dom";
+import {
+  changeAuth,
+  fetchUserLogin,
+  fetchUserProfile,
+} from "../redux/userReducer";
+import { getTokenCookie, setTokenCookie } from "../services/token";
 
 export default function Signin() {
   //Stocke le username et mot de password
@@ -12,6 +18,20 @@ export default function Signin() {
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const cookie = getTokenCookie();
+    if (user.auth) {
+      if (remember) {
+        setTokenCookie(user.auth);
+      }
+      navigate("/user");
+    } else if (cookie) {
+      dispatch(changeAuth(cookie));
+      dispatch(fetchUserProfile(cookie));
+    }
+  }, [user, navigate]);
 
   //Gére le formulaire de connexion
   const handleSubmit = async (e) => {

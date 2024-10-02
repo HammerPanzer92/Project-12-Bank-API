@@ -3,7 +3,7 @@
  * 
  * @param {String} token Le JWT token a stocké dans le cookie
  */
-function setTokenCookie(token) {
+export function setTokenCookie(token) {
     //Création de date d'expiration du token
     const date = new Date();
     date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); //Durée de 7 jours
@@ -16,7 +16,7 @@ function setTokenCookie(token) {
  * Récupére le JWT token
  * @returns Le JWT token en format String si il est présent, null dans le cas contraire
  */
-function getTokenCookie() {
+export function getTokenCookie() {
     const name = "token=";
     const decodedCookie = decodeURIComponent(document.cookie);
     const cookieArray = decodedCookie.split(';');
@@ -33,6 +33,6 @@ function getTokenCookie() {
 /**
  * Supprime le cookie complétement
  */
-function deleteTokenCookie() {
+export function deleteTokenCookie() {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }

@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeName } from "../redux/userReducer";
+import { changeAuth, changeName, fetchUserProfile } from "../redux/userReducer";
+import { getTokenCookie } from "../services/token";
+import { useNavigate } from "react-router-dom";
 
 export default function User() {
-  
-  const user = useSelector((state) => state.user)
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //State du nom et prénom (temp, seront stocké dans store Redux)
-  const [firstname, setFirstname] = useState("firstname");
-  const [lastname, setLastname] = useState("lastname");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
 
   //State des inputs
   const [tempFirstname, setTempFirstname] = useState(firstname);
@@ -18,19 +20,34 @@ export default function User() {
   //State qui détermine l'affichage des inputs pour modifié le nom et prénom
   const [isEditing, setIsEditing] = useState(false);
 
+  useEffect(() => {
+    var token = getTokenCookie();
+    if (user.firstname && user.lastname) {
+      setFirstname(user.firstname);
+      setLastname(user.lastname);
+      token = user.auth;
+    }else{
+      if(token && !user.firstname){
+        dispatch(changeAuth(token));
+        dispatch(fetchUserProfile(token));
+      }else{
+        navigate('/sign-in');
+      }
+    }
+  }, []);
+
   //Gére sauvegarde du nouveau nom et prénom
   const handleSave = () => {
     setFirstname(tempFirstname);
     setLastname(tempLastname);
-    dispatch(changeName({firstname: tempFirstname, lastname: tempLastname}));
-    console.log(user);
+    dispatch(changeName({ firstname: tempFirstname, lastname: tempLastname }));
     setIsEditing(false);
   };
 
   //Gére l'annulation des modifications
   const handleCancel = () => {
-    setTempFirstname(firstname);//Reset des valeurs temporaires
-    setTempLastname(lastname);
+    setTempFirstname(user.firstname); //Reset des valeurs temporaires
+    setTempLastname(user.lastname);
     setIsEditing(false);
   };
 
@@ -40,15 +57,15 @@ export default function User() {
         <h1>
           Welcome back
           <br />
-          {firstname} {lastname}!
+          {user.firstname} {user.lastname}!
         </h1>
-        
+
         {!isEditing && ( //Affichage du btn "edit name" si on n'est pas en mode édition
           <button className="edit-button" onClick={() => setIsEditing(true)}>
             Edit Name
           </button>
         )}
-        
+
         {isEditing && ( //si on est en mode édition alors on affiche les inputs a la place
           <div className="edit-container">
             <div className="input-container">

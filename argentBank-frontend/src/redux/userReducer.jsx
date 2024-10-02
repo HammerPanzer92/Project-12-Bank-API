@@ -50,6 +50,9 @@ const userSlice = createSlice({
       state.firstname = action.payload.firstname;
       state.lastname = action.payload.lastname;
     },
+    changeAuth: (state, action) => {
+      state.auth = action.payload.token;
+    },
     cleanState: (state, action) => {
       state.firstname = initialState.firstname;
       state.lastname = initialState.lastname;
@@ -82,6 +85,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { changeName } = userSlice.actions;
+export const { changeName, cleanState, changeAuth } = userSlice.actions;
 
 export default userSlice.reducer;
