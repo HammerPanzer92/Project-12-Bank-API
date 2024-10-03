@@ -34,8 +34,6 @@ export async function getProfile(token) {
   });
 
   const data = await response.json();
-  console.log("Login async");
-  console.log(data);
   return data;
 }
 

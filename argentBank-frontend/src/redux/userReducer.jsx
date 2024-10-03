@@ -46,8 +46,6 @@ export const fetchUserLogin = createAsyncThunk(
 export const updateUserProfile = createAsyncThunk(
   "user/updateUserProfile",
   async (data, thunkAPI) => {
-    console.log("Called updateUserProfile");
-    console.log(data);
     try{
       const response = await modifyProfile(data.auth, data.profile);
       if (response.status === 200) {

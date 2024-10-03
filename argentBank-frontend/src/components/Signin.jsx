@@ -28,6 +28,7 @@ export default function Signin() {
       }
       navigate("/user");
     } else if (cookie) {
+      console.log("cookie sign-in elif");
       dispatch(changeAuth(cookie));
       dispatch(fetchUserProfile(cookie));
     }
