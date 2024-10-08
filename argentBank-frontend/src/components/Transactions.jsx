@@ -16,27 +16,29 @@ export function Transactions() {
   ];
 
   return (
-    <div>
-      <head className="transcation-head">
-        <p>${title}</p>
+    <main className="main bg-dark transactions-main">
+      <header className="header">
+        <p>{title}</p>
         <h2>${location.state.balance}</h2>
         <p>Available Balance</p>
-      </head>
-      <div className="transaction-list">
-        {listTransactions.map((transaction, index) => {
-          balance += transaction.amount;
+      </header>
+      <div className="transactions-container">
+        <div className="transaction-list">
+          {listTransactions.map((transaction, index) => {
+            balance += transaction.amount;
 
-          return (
-            <Transaction
-              key={index}
-              date={"June 20th, 2020"}
-              description={"Golden Sun Bakery"}
-              amount={transaction.amount}
-              remainingBalance={balance}
-            />
-          );
-        })}
+            return (
+              <Transaction
+                key={index}
+                date={"June 20th, 2020"}
+                description={"Golden Sun Bakery"}
+                amount={transaction.amount}
+                balance={balance}
+              />
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
