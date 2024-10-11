@@ -3,7 +3,7 @@ import { useState } from "react";
 export function Transaction(props) {
   const tabCat = ["Food", "Tools", "Utilities"];
 
-  const [category, setCategory] = useState("Food");
+  const [category, setCategory] = useState(0);
   const [notes, setNotes] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
@@ -60,14 +60,14 @@ export function Transaction(props) {
             <img src="./img/pen.svg" alt="Changer la note" />
           </div>
           {isChangingNote && (
-            <>
+
               <input
                 type="text"
                 id="notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
-            </>
+
           )}
           </div>
         </div>

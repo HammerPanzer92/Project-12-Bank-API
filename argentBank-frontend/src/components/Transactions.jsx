@@ -1,9 +1,13 @@
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { Transaction } from "./Transaction";
 
 export function Transactions() {
   const location = useLocation();
   const title = location.state.title;
+
+  if(!title){
+    return <Navigate to={"/user"}/>;
+  }
 
   var balance = location.state.balance;
   const listTransactions = [

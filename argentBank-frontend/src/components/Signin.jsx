@@ -16,6 +16,8 @@ export default function Signin() {
   //Bool pour stockage du token dans un cookie
   const [remember, setRemember] = useState(false);
 
+  const [error, setError] = useState(false);
+
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,9 +30,12 @@ export default function Signin() {
       }
       navigate("/user");
     } else if (cookie) {
-      console.log("cookie sign-in elif");
       dispatch(changeAuth(cookie));
       dispatch(fetchUserProfile(cookie));
+    } else if (!user.auth) {
+      if (username !== "" || password !== "") {
+        setError(true);
+      }
     }
   }, [user, navigate]);
 
@@ -48,6 +53,7 @@ export default function Signin() {
       <section className="sign-in-content">
         <i className="fa fa-user-circle sign-in-icon"></i>
         <h1>Sign In</h1>
+        {error && <p className="error">Identifiant/Mot de passe faux</p>}
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
             <label htmlFor="username">Username</label>

@@ -6,7 +6,7 @@
 export function setTokenCookie(token) {
     //Création de date d'expiration du token
     const date = new Date();
-    date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); //Durée de 7 jours
+    date.setTime(date.getTime() + (1 * 24 * 60 * 60 * 1000)); //Durée de 7 jours
 
     //Mise en place du cookie
     document.cookie = `token=${token}; expires=${date.toUTCString()}; path=/; Secure; SameSite=Strict`;
