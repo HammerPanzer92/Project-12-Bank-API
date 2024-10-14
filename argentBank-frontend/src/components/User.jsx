@@ -49,7 +49,7 @@ export default function User() {
     dispatch(
       updateUserProfile({
         auth: user.auth,
-        profile: { firstname: tempFirstname, lastname: tempLastname },
+        profile: { firstName: tempFirstname, lastName: tempLastname },
       })
     );
     setIsEditing(false);
